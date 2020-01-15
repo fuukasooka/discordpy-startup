@@ -19,8 +19,12 @@ async def ping(ctx):
 
 @bot.command()
 async def dice(ctx, msg):
-    await ctx.send('msg')
-
-
+    await  ctx.send(msg)
+    say = msg 
+    cnt, mx = list(map(int, order.split('d'))) # さいころの個数と面数
+    dice = diceroll(cnt, mx) # 和を計算する関数(後述)
+    await  ctx.send(dice[cnt])
+        # さいころの目の総和の内訳を表示する
+    await  ctx.send(sum(dice))
 
 bot.run(token)
