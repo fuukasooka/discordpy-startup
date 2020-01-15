@@ -25,7 +25,7 @@ async def ping(ctx):
 async def dice(ctx, msg):
     m = re.match(r"^\d+d\d+$", msg.lower())
     if m:
-        await  ctx.send(ctx.author + "->" + msg)    
+        await  ctx.send(msg)    
     else:
         await  ctx.send("Invalid value. Write like NdM. (N and M are integers)")
         return
