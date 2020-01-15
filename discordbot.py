@@ -3,6 +3,9 @@ import os
 import traceback
 import re
 
+# さいころの和を計算する用の関数
+from func import  diceroll
+
 bot = commands.Bot(command_prefix='!')
 token = os.environ['DISCORD_BOT_TOKEN']
 
