@@ -23,11 +23,16 @@ async def ping(ctx):
 
 @bot.command()
 async def dice(ctx, msg):
+    if !msg : 
+        await  ctx.send("Invalid value. Write like NdM. (N and M are integers)")
+        return
+        
     m = re.match(r"^\d+d\d+$", msg)
     if m:
         await  ctx.send(msg)    
     else:
-        await  ctx.send("Invalid value.Write like NdM. (N and M are integers)")
+        await  ctx.send("Invalid value. Write like NdM. (N and M are integers)")
+        return
 
     cnt, mx = list(map(int, msg.split('d'))) # さいころの個数と面数
     dice = diceroll(cnt, mx) # 和を計算する関数(後述)
