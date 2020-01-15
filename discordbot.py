@@ -1,6 +1,7 @@
 from discord.ext import commands
 import os
 import traceback
+import re
 
 bot = commands.Bot(command_prefix='!')
 token = os.environ['DISCORD_BOT_TOKEN']
@@ -19,12 +20,17 @@ async def ping(ctx):
 
 @bot.command()
 async def dice(ctx, msg):
-    await  ctx.send(msg)
-    say = msg 
-    cnt, mx = list(map(int, order.split('d'))) # さいころの個数と面数
+    m = re.match(r"^\d+d\d+$", msg)
+    if m:
+        await  ctx.send(msg)    
+    else:
+        await  ctx.send("Invalid value.Write like NdM. (N and M are integers)")
+
+    cnt, mx = list(map(int, msg.split('d'))) # さいころの個数と面数
     dice = diceroll(cnt, mx) # 和を計算する関数(後述)
-    await  ctx.send(dice[cnt])
-        # さいころの目の総和の内訳を表示する
+        # サイコロの目の総和を表示
     await  ctx.send(sum(dice))
+        # さいころの目の内訳を表示する
+    await  ctx.send(dice)
 
 bot.run(token)
