@@ -23,17 +23,13 @@ async def on_ready():
 @client.event
 async def on_message(msg):
     try :
-        #bot空の発言は無視
+        #botからの発言は無視
         if msg.author.bot:
-            return
-        #発言開始の頭が!d(ice~)で無ければスルー
-        if (not msg.content.startswith("!d ")) and (not msg.content.startswith("!dice ")):
             return
         
         #オーダーを含む発言にマッチするか
-        m = re.match(r"^!d(?:ice)?\s+(\d+)d(\d+)\s*$", msg.content.lower())
+        m = re.match(r"^(\d+)[dD](\d+)$", msg.content)
         if not m:
-            await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
             return
 
         # 入力された内容を受け取る
@@ -41,15 +37,15 @@ async def on_message(msg):
         mx = int(m.group(2))     #dice の出目
 
         if (order > 100) or (0 >= order):
-            await msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
+            await msg.channel.send("@" + str(msg.author) + " Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
             return 
 
         if (mx > 1000) or (0 >= mx):
-            await msg.channel.send("Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
+            await msg.channel.send("@" + str(msg.author) + " Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
             return
 
         result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
-        await msg.channel.send("OK -> " + str(msg.author) + " to ordr: " + str(order)+"d"+str(mx))
+        await msg.channel.send("@" + str(msg.author) + " to order: " + str(order)+"d"+str(mx))
         await msg.channel.send("total: " + str(sum(result)))    # さいころの総和を表示
         await msg.channel.send(result)                          # さいころの目の内訳を表示する
 
