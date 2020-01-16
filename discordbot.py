@@ -8,7 +8,7 @@ from func import  diceroll
 
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
-token = os.environ['DISCORD_BOT_TOKEN'] #= "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAZiQ.U4ZaHIbRXpsnjKXuU_PQpbb_mQA"
+token = os.environ['DISCORD_BOT_TOKEN'] = "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAfxA.YMAE0u7kVUtmUJbJYG6YZg5wYw4"
 
 @client.event
 async def on_ready():
@@ -39,8 +39,8 @@ async def on_message(msg):
             return
 
         # 入力された内容を受け取る
-        order = m.group(1)  #dice を振る回数
-        mx = m.group(2)     #dice の出目
+        order = int(m.group(1))  #dice を振る回数
+        mx = int(m.group(2))     #dice の出目
 
         if (order > 100) or (0 >= order):
             await msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")

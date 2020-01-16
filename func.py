@@ -1,6 +1,6 @@
 import random
 
-def diceroll(cnt, max):
+def diceroll(cnt: int , max: int):
     total = 0
     num_list = []
     for i in range(0, cnt):
