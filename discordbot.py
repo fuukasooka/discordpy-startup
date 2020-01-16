@@ -32,9 +32,7 @@ async def on_message(msg):
         
         #オーダーを含む発言にマッチするか
         m = re.match(r"^!d(?:ice)?\s+(\d+)d(\d+)\s*$", msg.content.lower())
-        if m:
-            await  msg.channel.send("OK")
-        else:
+        if not m:
             await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
             return
 
@@ -51,8 +49,9 @@ async def on_message(msg):
             return
 
         result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
-        await msg.channel.send(sum(result)) # さいころの総和を表示
-        await msg.channel.send(result)      # さいころの目の内訳を表示する
+        await msg.channel.send("OK -> " + str(msg.author) + " to ordr: " + str(order)+"d"+str(mx))
+        await msg.channel.send("total: " + str(sum(result)))    # さいころの総和を表示
+        await msg.channel.send(result)                          # さいころの目の内訳を表示する
 
     except Exception as e:                  #エラーハンドリング
         await msg.channel.send(e)
