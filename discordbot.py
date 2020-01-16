@@ -23,10 +23,10 @@ async def on_ready():
 @client.event
 async def on_message(msg):
     #bot空の発言は無視
-    if message.author.bot:
+    if msg.author.bot:
         return
     #オーダーを含む発言にマッチするか
-    m = re.match(r"^!d(?:ice)?\s(\d+d\d+)$", message.content.lower())
+    m = re.match(r"^!d(?:ice)?\s(\d+d\d+)$", msg.content.lower())
     if m:
         await  msg.channel.send(msg)
     else:
@@ -42,7 +42,7 @@ async def on_message(msg):
         return 
 
     resalt = diceroll(order, mx) # m面ダイスをn回振る関数
-    await message.channel.send(sum(resalt)) # さいころの総和を表示
-    await message.channel.send(dice)        # さいころの目の内訳を表示する
+    await msg.channel.send(sum(resalt)) # さいころの総和を表示
+    await msg.channel.send(dice)        # さいころの目の内訳を表示する
 
 client.run(token)
