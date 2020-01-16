@@ -1,5 +1,6 @@
-from discord
+import discord
 import sys
+import os
 import re
 
 # さいころの和を計算する用の関数
