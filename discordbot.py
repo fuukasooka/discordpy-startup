@@ -7,20 +7,20 @@ import re
 from func import  diceroll
 
 #bot = commands.Bot(command_prefix='/')
-cliant = discord.Cliant()
+client = discord.Client()
 token = os.environ['DISCORD_BOT_TOKEN']
 
-@cliant.event
+@client.event
 async def on_ready():
     print('--------------')
     print('ログインしました')
-    print(cliant.user.name)
-    print(cliant.user.id)
+    print(client.user.name)
+    print(client.user.id)
     print('--------------')
-    channel = cliant.get_channel('チャンネルID')
+    channel = client.get_channel('チャンネルID')
     await channel.send('ダイスロールは任せろ―！ばりばり～')
 
-@cliant.event
+@client.event
 async def on_message(msg):
     #bot空の発言は無視
     if message.author.bot:
@@ -45,4 +45,4 @@ async def on_message(msg):
     await message.channel.send(sum(resalt)) # さいころの総和を表示
     await message.channel.send(dice)        # さいころの目の内訳を表示する
 
-cliant.run(token)
+client.run(token)
