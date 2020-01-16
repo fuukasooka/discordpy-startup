@@ -1,6 +1,5 @@
-from discord.ext import commands
-import os
-import traceback
+from discord
+import sys
 import re
 
 # さいころの和を計算する用の関数
@@ -14,13 +13,13 @@ token = os.environ['DISCORD_BOT_TOKEN']
 async def on_ready():
     print('--------------')
     print('ログインしました')
-    print(client.user.name)
-    print(client.user.id)
+    print(cliant.user.name)
+    print(cliant.user.id)
     print('--------------')
-    channel = client.get_channel('チャンネルID')
+    channel = cliant.get_channel('チャンネルID')
     await channel.send('ダイスロールは任せろ―！ばりばり～')
 
-@client.event
+@cliant.event
 async def on_message(msg):
     #bot空の発言は無視
     if message.author.bot:
