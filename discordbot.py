@@ -25,10 +25,16 @@ async def on_message(msg):
     #bot空の発言は無視
     if msg.author.bot:
         return
+    #発言開始の頭が!d(ice~)で無ければスルー
+    if not msg.content.startswith("!d "):
+        return
+    if not msg.content.startswith("!dice "):
+        return
+    
     #オーダーを含む発言にマッチするか
     m = re.match(r"^!d(?:ice)?\s(\d+)d(\d+)$", msg.content.lower())
     if m:
-        await  msg.channel.send("OK:"+msg.author)
+        await  msg.channel.send("OK")
     else:
         await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
         return
