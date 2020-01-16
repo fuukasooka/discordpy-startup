@@ -8,8 +8,7 @@ from func import  diceroll
 
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
-token = os.environ['DISCORD_BOT_TOKEN']
-#token = os.environ['DISCORD_BOT_TOKEN'] = "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
+token = os.environ['DISCORD_BOT_TOKEN'] #= "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
 
 @client.event
 async def on_ready():
@@ -21,35 +20,40 @@ async def on_ready():
 
 @client.event
 async def on_message(msg):
-    #bot空の発言は無視
-    if msg.author.bot:
-        return
-    #発言開始の頭が!d(ice~)で無ければスルー
-    if (not msg.content.startswith("!d ")) and (not msg.content.startswith("!dice ")):
-        return
-    
-    #オーダーを含む発言にマッチするか
-    m = re.match(r"^!d(?:ice)?\s*(\d+)d(\d+)\s*$", msg.content.lower())
-    if m:
-        await  msg.channel.send("OK")
-    else:
-        await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
-        return
+    try
+        #bot空の発言は無視
+        if msg.author.bot:
+            return
+        #発言開始の頭が!d(ice~)で無ければスルー
+        if (not msg.content.startswith("!d ")) and (not msg.content.startswith("!dice ")):
+            return
+        
+        #オーダーを含む発言にマッチするか
+        m = re.match(r"^!d(?:ice)?\s+(\d+)d(\d+)\s*$", msg.content.lower())
+        if m:
+            await  msg.channel.send("OK")
+        else:
+            await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
+            return
 
-    # 入力された内容を受け取る
-    order = m.group(1)  #dice を振る回数
-    mx = m.group(2)     #dice の出目
+        # 入力された内容を受け取る
+        order = m.group(1)  #dice を振る回数
+        mx = m.group(2)     #dice の出目
 
-    if (order > 100) or (0 >= order):
-        await msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
-        return 
+        if (order > 100) or (0 >= order):
+            await msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
+            return 
 
-    if (mx > 1000) or (0 >= mx):
-        await msg.channel.send("Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
-        return
+        if (mx > 1000) or (0 >= mx):
+            await msg.channel.send("Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
+            return
 
-    result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
-    await msg.channel.send(sum(result)) # さいころの総和を表示
-    await msg.channel.send(result)      # さいころの目の内訳を表示する
+        result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
+        await msg.channel.send(sum(result)) # さいころの総和を表示
+        await msg.channel.send(result)      # さいころの目の内訳を表示する
+
+    except Exception as e:                  #エラーハンドリング
+        await msg.channel.send(e)
+        print(e)
 
 client.run(token)
