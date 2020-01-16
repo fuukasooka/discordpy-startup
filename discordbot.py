@@ -46,7 +46,7 @@ async def on_message(msg):
 
         result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
         await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
-        await msg.channel.send("total: " + str(sum(result)) +" [" + result.join(",") + "]")
+        await msg.channel.send("total: " + str(sum(result)) +" [" + ",".join(map(str,result)) + "]")
 
     except Exception as e:                  #エラーハンドリング
         await msg.channel.send(e)
