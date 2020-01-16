@@ -9,6 +9,7 @@ from func import  diceroll
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
 token = os.environ['DISCORD_BOT_TOKEN']
+#token = os.environ['DISCORD_BOT_TOKEN'] = "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
 
 @client.event
 async def on_ready():
@@ -17,8 +18,6 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('--------------')
-    channel = client.get_channel('チャンネルID')
-    await channel.send('ダイスロールは任せろ―！ばりばり～')
 
 @client.event
 async def on_message(msg):
@@ -30,7 +29,7 @@ async def on_message(msg):
         return
     
     #オーダーを含む発言にマッチするか
-    m = re.match(r"^!d(?:ice)?\s(\d+)d(\d+)$", msg.content.lower())
+    m = re.match(r"^!d(?:ice)?\s*(\d+)d(\d+)\s*$", msg.content.lower())
     if m:
         await  msg.channel.send("OK")
     else:
@@ -39,14 +38,18 @@ async def on_message(msg):
 
     # 入力された内容を受け取る
     order = m.group(1)  #dice を振る回数
-    mx = m.group(2)   #dice の出目
+    mx = m.group(2)     #dice の出目
 
-    if order >= 100 :
-        msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
+    if (order > 100) or (0 >= order):
+        await msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
         return 
 
-    resalt = diceroll(order, mx) # m面ダイスをn回振る関数
-    await msg.channel.send(sum(resalt)) # さいころの総和を表示
-    await msg.channel.send(dice)        # さいころの目の内訳を表示する
+    if (mx > 1000) or (0 >= mx):
+        await msg.channel.send("Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
+        return
+
+    result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
+    await msg.channel.send(sum(result)) # さいころの総和を表示
+    await msg.channel.send(result)      # さいころの目の内訳を表示する
 
 client.run(token)
