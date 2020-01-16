@@ -8,7 +8,7 @@ from func import  diceroll
 
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
-token = os.environ['DISCORD_BOT_TOKEN'] = "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
+token = os.environ['DISCORD_BOT_TOKEN'] #= "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAZiQ.U4ZaHIbRXpsnjKXuU_PQpbb_mQA"
 
 @client.event
 async def on_ready():
