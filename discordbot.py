@@ -37,17 +37,16 @@ async def on_message(msg):
         mx = int(m.group(2))     #dice の出目
 
         if (order > 100) or (0 >= order):
-            await msg.channel.send("@" + str(msg.author) + " Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
+            await msg.channel.send(msg.author.mention + " Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
             return 
 
         if (mx > 1000) or (0 >= mx):
-            await msg.channel.send("@" + str(msg.author) + " Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
+            await msg.channel.send(msg.author.mention + " Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
             return
 
         result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
-        await msg.channel.send("@" + str(msg.author) + " to order: " + str(order)+"d"+str(mx))
-        await msg.channel.send("total: " + str(sum(result)))    # さいころの総和を表示
-        await msg.channel.send(result)                          # さいころの目の内訳を表示する
+        await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
+        await msg.channel.send("total: " + str(sum(result)) +" [" + result.join(",") + "]")
 
     except Exception as e:                  #エラーハンドリング
         await msg.channel.send(e)
