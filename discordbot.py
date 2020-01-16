@@ -26,9 +26,9 @@ async def on_message(msg):
     if msg.author.bot:
         return
     #オーダーを含む発言にマッチするか
-    m = re.match(r"^!d(?:ice)?\s(\d+d\d+)$", msg.content.lower())
+    m = re.match(r"^!d(?:ice)?\s(\d+)d(\d+)$", msg.content.lower())
     if m:
-        await  msg.channel.send(msg)
+        await  msg.channel.send("OK:"+msg.author)
     else:
         await  msg.channel.send("Invalid value. Write like MdN. (M and N are integers)")
         return
@@ -38,7 +38,7 @@ async def on_message(msg):
     mx = m.group(2)   #dice の出目
 
     if order >= 100 :
-        msg.channel.send("Order value:M is invalid. (Valid values are 1-100.)")
+        msg.channel.send("Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
         return 
 
     resalt = diceroll(order, mx) # m面ダイスをn回振る関数
