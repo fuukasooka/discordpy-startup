@@ -26,9 +26,7 @@ async def on_message(msg):
     if msg.author.bot:
         return
     #発言開始の頭が!d(ice~)で無ければスルー
-    if not msg.content.startswith("!d "):
-        return
-    if not msg.content.startswith("!dice "):
+    if (not msg.content.startswith("!d ")) and (not msg.content.startswith("!dice ")):
         return
     
     #オーダーを含む発言にマッチするか
