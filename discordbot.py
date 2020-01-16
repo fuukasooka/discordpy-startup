@@ -8,7 +8,7 @@ from func import  diceroll
 
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
-token = os.environ['DISCORD_BOT_TOKEN'] #= "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
+token = os.environ['DISCORD_BOT_TOKEN'] = "NjY2OTA3Mjk2NTAwMTU0MzY4.XiAMtg.AU68kZY7pMgzsAtkU27HS9hPb6Y"
 
 @client.event
 async def on_ready():
@@ -17,12 +17,12 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('--------------')
-    channel = client.get_channel('チャンネルID')
-    await channel.send('楽しいTRPGを始めましょう！')
+#    channel = client.get_channel('チャンネルID')
+#    await channel.send('楽しいTRPGを始めましょう！')
 
 @client.event
 async def on_message(msg):
-    try
+    try :
         #bot空の発言は無視
         if msg.author.bot:
             return
