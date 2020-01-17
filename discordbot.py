@@ -28,13 +28,14 @@ async def on_message(msg):
             return
         
         #オーダーを含む発言にマッチするか
-        m = re.match(r"^(\d+)[dD](\d+)$", msg.content)
+        m = re.match(r"^(\d+)[dD](\d+)(\shide)?$", msg.content)
         if not m:
             return
 
         # 入力された内容を受け取る
         order = int(m.group(1))  #dice を振る回数
         mx = int(m.group(2))     #dice の出目
+        hide = bool(m.group(3))
 
         if (order > 100) or (0 >= order):
             await msg.channel.send(msg.author.mention + " Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
@@ -45,8 +46,16 @@ async def on_message(msg):
             return
 
         result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
-        await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
-        await msg.channel.send("total: " + str(sum(result)) +" [" + ",".join(map(str,result)) + "]")
+        if hide:
+            #DMに送信
+            dm = await msg.author.create_dm()
+            await dm.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
+            await dm.send("total: " + str(sum(result)) +" [" + ", ".join(map(str,result)) + "]") 
+            await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx) + " hide : Send your direct message")          
+        else :
+            #メッセージのチャンネルに送信
+            await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
+            await msg.channel.send("total: " + str(sum(result)) +" [" + ", ".join(map(str,result)) + "]")
 
     except Exception as e:                  #エラーハンドリング
         await msg.channel.send(e)
