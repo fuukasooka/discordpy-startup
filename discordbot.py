@@ -28,34 +28,70 @@ async def on_message(msg):
             return
         
         #オーダーを含む発言にマッチするか
-        m = re.match(r"^(\d+)[dD](\d+)(\shide)?$", msg.content)
+        m = re.match(r"^(\d+)[dD](\d+).*$", msg.content)
         if not m:
             return
+        
+        #コマンド・オプションを分ける
+        cmd_l = msg.content.lower().split(' ')
+        cmd = cmd_l.pop(0)
+
+        #初期値の設定
+        hide = False
+        result = "aaa"
+        total = 0
+
+        def calc(cmd):
+            res = ""
+            c = re.match(r"^(\d+(?:[d]\d+)?)([+-].*)?$",cmd)
+            item = c.group(1)            
+            s_item = c.group(2)
+            if 'd' in item:
+                (order,dice) = map(int,item.split('d'))
+                d = diceroll(order,dice)
+                cul = sum(d)
+                detile = ' ,'.join(map(str,d))
+                res += item + f"({cul})[{detile}]"
+            else :
+                cul = int(item)
+                res += str(cul)
+            if s_item :
+                res += s_item[0] 
+                if s_item[0] == "-":
+                    a , b = calc(s_item[1:])
+                    return [cul - a, res + str(b)]
+                elif s_item[0] == "+":
+                    a , b = calc(s_item[1:])
+                    return [cul + a, res + str(b)]
+            else :
+                return cul , res
+
+        total ,result = calc(cmd)
+        for opt in cmd_l:
+            prm = opt[0:2] 
+            if prm == "-t":
+                t = int(opt[2:])
+            elif prm == "-h" or opt == "hide":
+                h = True
+            elif prm == "-p":
+                p = int(opt[2:])
+            elif prm == "-b":
+                b = int(opt[2:])
+            elif opt == "help":
+                print("Help")
+            else:
+                raise ValueError(opt + ":オプションは存在しません")
+
 
         # 入力された内容を受け取る
-        order = int(m.group(1))  #dice を振る回数
-        mx = int(m.group(2))     #dice の出目
-        hide = bool(m.group(3))
-
-        if (order > 100) or (0 >= order):
-            await msg.channel.send(msg.author.mention + " Sorry.. Order value:M is invalid. (Valid values are 1-100.)")
-            return 
-
-        if (mx > 1000) or (0 >= mx):
-            await msg.channel.send(msg.author.mention + " Sorry.. Dice value:N is invalid. (valid value are 1-1000)")
-            return
-
-        result = diceroll(order, mx)        # mx面ダイスをorder回振る関数
         if hide:
             #DMに送信
             dm = await msg.author.create_dm()
-            await dm.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
-            await dm.send("total: " + str(sum(result)) +" [" + ", ".join(map(str,result)) + "]") 
-            await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx) + " hide : Send your direct message")          
+            await dm.send(msg.author.mention + f"結果 : {total} = {result}" )
+            await msg.channel.send(msg.author.mention + " : " + f"{msg.content}" + " : ダイレクトメッセージ送ったぞ！")          
         else :
             #メッセージのチャンネルに送信
-            await msg.channel.send(msg.author.mention + " to order: " + str(order)+"d"+str(mx))
-            await msg.channel.send("total: " + str(sum(result)) +" [" + ", ".join(map(str,result)) + "]")
+            await msg.channel.send(msg.author.mention + f"結果 : {total} = {result}" )
 
     except Exception as e:                  #エラーハンドリング
         await msg.channel.send(e)
