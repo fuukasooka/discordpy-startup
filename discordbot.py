@@ -65,7 +65,7 @@ async def on_message(msg):
             return
 
         #ヘルプ        
-        if msg.content.index("dice-bot help") != -1:
+        if msg.content.find("dice-bot help") == 0:
             await msg.channel.send(help_txt)
             return
 
