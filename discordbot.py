@@ -5,6 +5,8 @@ import re
 
 # さいころの和を計算する用の関数
 from func import  diceroll
+from func import  calc
+from func import  calc_1d100
 
 #bot = commands.Bot(command_prefix='/')
 client = discord.Client()
@@ -37,36 +39,11 @@ async def on_message(msg):
         cmd = cmd_l.pop(0)
 
         #初期値の設定
-        hide = False
-        result = "aaa"
+        h = False
+        result = ""
         total = 0
-
-        def calc(cmd):
-            res = ""
-            c = re.match(r"^(\d+(?:[d]\d+)?)([+-].*)?$",cmd)
-            item = c.group(1)            
-            s_item = c.group(2)
-            if 'd' in item:
-                (order,dice) = map(int,item.split('d'))
-                d = diceroll(order,dice)
-                cul = sum(d)
-                detile = ' ,'.join(map(str,d))
-                res += item + f"({cul})[{detile}]"
-            else :
-                cul = int(item)
-                res += str(cul)
-            if s_item :
-                res += s_item[0] 
-                if s_item[0] == "-":
-                    a , b = calc(s_item[1:])
-                    return [cul - a, res + str(b)]
-                elif s_item[0] == "+":
-                    a , b = calc(s_item[1:])
-                    return [cul + a, res + str(b)]
-            else :
-                return cul , res
-
-        total ,result = calc(cmd)
+        add_dice = 0
+        #引数
         for opt in cmd_l:
             prm = opt[0:2] 
             if prm == "-t":
@@ -74,21 +51,40 @@ async def on_message(msg):
             elif prm == "-h" or opt == "hide":
                 h = True
             elif prm == "-p":
-                p = int(opt[2:])
+                if not opt[2:]:
+                    add_dice = -1
+                else :
+                    if int(opt[2:]) <= 0:
+                        raise ValueError("ペナルティダイスの数が不正です")
+                    add_dice = - int(opt[2:])
+                if cmd != "1d100":
+                    raise ValueError("ペナルティダイスオプションは1D100の場合しか指定できません。")
+                    return
             elif prm == "-b":
-                b = int(opt[2:])
+                if not opt[2:]:
+                    add_dice = 1
+                else :
+                    if int(opt[2:]) <= 0:
+                        raise ValueError("ボーナスダイスの数が不正です")
+                    add_dice = int(opt[2:])
+                if cmd != "1d100":
+                    raise ValueError("ボーナスダイスオプションは1D100の場合しか指定できません。")
+                    return
             elif opt == "help":
                 print("Help")
             else:
                 raise ValueError(opt + ":オプションは存在しません")
-
-
+        if add_dice == 0 :
+            total ,result = calc(cmd)
+        else :
+            total ,result = calc_1d100(add_dice)
+        
         # 入力された内容を受け取る
-        if hide:
+        if h:
             #DMに送信
             dm = await msg.author.create_dm()
             await dm.send(msg.author.mention + f"結果 : {total} = {result}" )
-            await msg.channel.send(msg.author.mention + " : " + f"{msg.content}" + " : ダイレクトメッセージ送ったぞ！")          
+            await msg.channel.send(msg.author.mention + " : " + f"{msg.content}" + " : 結果はダイレクトメッセージに送ったよ")          
         else :
             #メッセージのチャンネルに送信
             await msg.channel.send(msg.author.mention + f"結果 : {total} = {result}" )
