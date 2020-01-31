@@ -80,14 +80,26 @@ async def on_message(msg):
 
         #初期値の設定
         h = False
+        target_value = 0
         result = ""
-        total = 0
+        total = ""
         add_dice = 0
         #引数
         for opt in cmd_l:
             prm = opt[0:2] 
             if prm == "-t":
-                t = int(opt[2:])
+                if not opt[2:]:
+                    raise ValueError("目標値の設定が必要です")
+                    return
+                target_value = int(opt[2:])
+                if not target_value :
+                    raise ValueError("目標値の値が不正です")
+                elif target_value <= 0 or 100 < target_value :
+                    raise ValueError("目標値の値は1-100までです")
+                    return
+                if cmd != "1d100":
+                    raise ValueError("目標値のダイスオプションは1D100の場合しか指定できません。")
+                    return
             elif prm == "-h" or opt == "hide":
                 h = True
             elif prm == "-p":
@@ -114,11 +126,11 @@ async def on_message(msg):
                 print("Help")
             else:
                 raise ValueError(opt + ":オプションは存在しません")
-        if add_dice == 0 :
+        if add_dice == 0 and target_value == 0:
             total ,result = calc(cmd)
         else :
-            total ,result = calc_1d100(add_dice)
-        
+            total ,result = calc_1d100(add_dice,target_value)
+
         # 入力された内容を受け取る
         if h:
             #DMに送信

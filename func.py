@@ -46,21 +46,27 @@ def calc(cmd: str):
         return cul , res
 
 
-def calc_1d100(add_dice: int):
+def calc_1d100(add_dice: int,target_value: int):
     res = ""
+    ttl = ""
     item = "1d100"
     opt = ""      
     b = False
     p = False
+    t = False
     add = 0
+    if 0 < target_value:
+        t = True
+        ttl += f"(目標:{target_value}) " 
+
     if add_dice < 0:
         p = True
         add = - add_dice
-        opt = f"<p{add}> "
+        ttl += f"(ペナルティダイス:{add}) "
     elif add_dice > 0:
         b = True
         add = add_dice
-        opt = f"<b{add}> "
+        ttl += f"(ボーナスダイス:{add}) "
 
     (order,dice) = map(int,item.split('d'))
     d = diceroll(order,dice)
@@ -79,7 +85,28 @@ def calc_1d100(add_dice: int):
     elif b:
         cul = min(d)
 
-    detile = ' or '.join(map(str,d))
-    res = item + opt + f"({cul})[{detile}]"
+    t_m = ""
+    if t :
+        fnb = 96
+        s_r = int(target_value )
+        s_h = int(target_value / 2)
+        s_e = int(target_value / 5)
+        s_c = 1
+        if s_c >= cul:
+            t_m = f"\n ⇒ クリティカル!!!"
+        elif s_e >= cul:
+            t_m = f"\n ⇒ 成功（イクストリーム）"
+        elif s_h >= cul:
+            t_m = f"\n ⇒ 成功（ハード）"
+        elif s_r >= cul:
+            t_m = f"\n ⇒ 成功（レギュラー）"
+        elif fnb > cul:
+            t_m = f"\n ⇒ 失敗"
+        elif cul >= fnb:
+            t_m = f"\n ⇒ ファンブル"
 
-    return cul , res
+    detile = ' or '.join(map(str,d))
+    res = item + opt + f"({cul})[{detile}]" + t_m
+    ttl = str(cul) + ttl
+
+    return ttl , res
